@@ -21,7 +21,7 @@
       top: 30%;
       width: 100%;
       text-align: center;
-      font-size: 100px;
+      font-size: 150px; /* الأرقام أكبر */
       color: #ff4d4d; /* أحمر فاتح */
       font-family: Arial, sans-serif;
       z-index: 2;
@@ -31,7 +31,7 @@
       top: 50%;
       width: 100%;
       text-align: center;
-      font-size: 60px;
+      font-size: 70px;
       color: red;
       font-family: Arial, sans-serif;
       z-index: 2;
@@ -44,7 +44,11 @@
   <canvas id="matrix"></canvas>
   <div id="countdown"></div>
   <div id="message"></div>
-  <audio id="music" src="https://www.youtube.com/embed/LoqE2yhs2-0" type="audio/mpeg"></audio>
+
+  <!-- بدل YouTube نحط iframe لأنه ما يشتغل في audio -->
+  <iframe id="music" width="0" height="0" 
+          src="" 
+          frameborder="0" allow="autoplay"></iframe>
 
   <script>
     // Matrix Rain
@@ -74,7 +78,7 @@
     }
     setInterval(draw, 50);
 
-    // Countdown
+    // Countdown يبدأ مع الماتريكس
     let count = 3;
     const countdownEl = document.getElementById("countdown");
     const messageEl = document.getElementById("message");
@@ -89,6 +93,7 @@
       if (count < 0) {
         clearInterval(timer);
         countdownEl.style.display = "none";
+
         // Show messages in sequence
         let words = ["Happy", "Birthday", "Abdo"];
         let index = 0;
@@ -104,8 +109,9 @@
           }
         }
         showWord();
-        // Play music
-        music.play();
+
+        // Play music from YouTube (autoplay hidden)
+        music.src = "https://www.youtube.com/embed/LoqE2yhs2-0?autoplay=1";
       }
     }, 1000);
   </script>
