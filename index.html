@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Abdo!</title>
+<style>
+  body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+    font-family: monospace;
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  /* التحذير لو الهاتف عمودي */
+  @media only screen and (orientation: portrait) {
+    body::before {
+      content: "⚠️ الرجاء تدوير الهاتف لرؤية الموقع بشكل أفقي!";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: red;
+      color: white;
+      font-size: 20px;
+      padding: 20px;
+      z-index: 9999;
+      text-align: center;
+    }
+    body > * {
+      display: none;
+    }
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  #countdown, #message, #book {
+    z-index: 10;
+    text-align: center;
+  }
+
+  #countdown {
+    font-size: 80px;
+    color: yellow;
+  }
+
+  #message {
+    font-size: 40px;
+    display: none;
+  }
+
+  #book {
+    width: 100px;
+    margin-top: 20px;
+    cursor: pointer;
+    display: none;
+  }
+
+  #popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.9);
+    color: black;
+    padding: 20px;
+    text-align: center;
+    display: none;
+    z-index: 20;
+  }
+
+  #popup img {
+    width: 150px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="countdown">3</div>
+<div id="message"></div>
+<img id="book" src="https://i.imgur.com/7X4ZkJh.png" alt="Book Icon">
+
+<div id="popup">
+  <p>لما بفكر قلك 🙂</p>
+  <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="Birthday Cake">
+  <br><br>
+  <button onclick="closePopup()">اغلق</button>
+</div>
+
+<audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+<script>
+// ================= Matrix rain effect =================
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const text = "Happy birthday to you Abdo ";
+const letters = text.split("");
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+const drops = [];
+for(let x = 0; x < columns; x++) drops[x] = 1;
+
+function drawMatrix(){
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "#ff0000";
+  ctx.font = fontSize + "px monospace";
+  for(let i=0;i<drops.length;i++){
+    const char = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(char,i*fontSize,drops[i]*fontSize);
+    if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
+    drops[i]++;
+  }
+}
+setInterval(drawMatrix,33);
+
+// ================= Countdown =================
+const countdownEl = document.getElementById("countdown");
+const messageEl = document.getElementById("message");
+const bookEl = document.getElementById("book");
+const musicEl = document.getElementById("music");
+let countdown = 3;
+
+const countdownInterval = setInterval(()=>{
+  if(countdown>=0){
+    countdownEl.textContent = countdown;
+    countdown--;
+  } else {
+    clearInterval(countdownInterval);
+    countdownEl.style.display="none";
+    showMessage();
+    musicEl.play();
+    bookEl.style.display="block";
+  }
+},1000);
+
+// ================= Show message letter by letter =================
+function showMessage(){
+  messageEl.style.display="block";
+  const msg = "Happy birthday to you Abdo";
+  let index = 0;
+  function type(){
+    if(index<msg.length){
+      messageEl.textContent += msg[index];
+      index++;
+      setTimeout(type,150);
+    }
+  }
+  type();
+}
+
+// ================= Book popup =================
+bookEl.addEventListener("click",()=>{
+  document.getElementById("popup").style.display="block";
+});
+
+function closePopup(){
+  document.getElementById("popup").style.display="none";
+}
+</script>
+
+</body>
+</html>
