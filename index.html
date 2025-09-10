@@ -21,10 +21,11 @@
       top: 30%;
       width: 100%;
       text-align: center;
-      font-size: 150px; /* الأرقام أكبر */
+      font-size: 150px; /* أرقام كبيرة */
       color: #ff4d4d; /* أحمر فاتح */
       font-family: Arial, sans-serif;
       z-index: 2;
+      display: none; /* مخفي بالبداية */
     }
     #message {
       position: absolute;
@@ -45,7 +46,7 @@
   <div id="countdown"></div>
   <div id="message"></div>
 
-  <!-- بدل YouTube نحط iframe لأنه ما يشتغل في audio -->
+  <!-- iframe للموسيقى -->
   <iframe id="music" width="0" height="0" 
           src="" 
           frameborder="0" allow="autoplay"></iframe>
@@ -78,42 +79,46 @@
     }
     setInterval(draw, 50);
 
-    // Countdown يبدأ مع الماتريكس
+    // Countdown بعد 10 ثواني
     let count = 3;
     const countdownEl = document.getElementById("countdown");
     const messageEl = document.getElementById("message");
     const music = document.getElementById("music");
 
-    countdownEl.innerHTML = count;
-    const timer = setInterval(() => {
-      count--;
-      if (count >= 0) {
-        countdownEl.innerHTML = count;
-      }
-      if (count < 0) {
-        clearInterval(timer);
-        countdownEl.style.display = "none";
+    setTimeout(() => {
+      countdownEl.style.display = "block";
+      countdownEl.innerHTML = count;
 
-        // Show messages in sequence
-        let words = ["Happy", "Birthday", "Abdo"];
-        let index = 0;
-        function showWord() {
-          if (index < words.length) {
-            messageEl.innerHTML = words[index];
-            messageEl.style.opacity = 1;
-            setTimeout(() => {
-              messageEl.style.opacity = 0;
-              index++;
-              setTimeout(showWord, 1000);
-            }, 1500);
-          }
+      const timer = setInterval(() => {
+        count--;
+        if (count >= 0) {
+          countdownEl.innerHTML = count;
         }
-        showWord();
+        if (count < 0) {
+          clearInterval(timer);
+          countdownEl.style.display = "none";
 
-        // Play music from YouTube (autoplay hidden)
-        music.src = "https://www.youtube.com/embed/LoqE2yhs2-0?autoplay=1";
-      }
-    }, 1000);
+          // Show messages in sequence
+          let words = ["Happy", "Birthday", "Abdo"];
+          let index = 0;
+          function showWord() {
+            if (index < words.length) {
+              messageEl.innerHTML = words[index];
+              messageEl.style.opacity = 1;
+              setTimeout(() => {
+                messageEl.style.opacity = 0;
+                index++;
+                setTimeout(showWord, 1000);
+              }, 1500);
+            }
+          }
+          showWord();
+
+          // Play music
+          music.src = "https://www.youtube.com/embed/LoqE2yhs2-0?autoplay=1";
+        }
+      }, 1000);
+    }, 10000); // ← يبدأ بعد 10 ثواني
   </script>
 </body>
 </html>
