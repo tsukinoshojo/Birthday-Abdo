@@ -2,61 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Matrix Effect</title>
+  <title>Happy Birthday Abdo</title>
   <style>
     body {
       margin: 0;
-      background: black;
       overflow: hidden;
+      background: black;
+      color: red;
     }
     canvas {
       display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #countdown {
+      position: absolute;
+      top: 30%;
+      width: 100%;
+      text-align: center;
+      font-size: 100px;
+      color: #ff4d4d; /* أحمر فاتح */
+      font-family: Arial, sans-serif;
+      z-index: 2;
+    }
+    #message {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      text-align: center;
+      font-size: 60px;
+      color: red;
+      font-family: Arial, sans-serif;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 1s;
     }
   </style>
 </head>
 <body>
   <canvas id="matrix"></canvas>
+  <div id="countdown"></div>
+  <div id="message"></div>
+  <audio id="music" src="https://www.youtube.com/embed/LoqE2yhs2-0" type="audio/mpeg"></audio>
 
   <script>
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
-
-    // حجم الكانفاس = حجم الشاشة
+    // Matrix Rain
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
 
-    // النص اللي يتساقط
-    const letters = "Happy birthday to you Abdo ".split("");
-
-    const fontSize = 16;
-    const columns = canvas.width / fontSize; 
-    const drops = [];
-
-    for (let x = 0; x < columns; x++) {
-      drops[x] = 1;
-    }
+    const letters = "Happy birthday to you Abdo".split("");
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
 
     function draw() {
-      // خلفية شفافة = تعطي إحساس المطر
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillStyle = "rgba(0,0,0,0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = "red"; // اللون (هنا أحمر بدل أخضر)
+      ctx.fillStyle = "red";
       ctx.font = fontSize + "px monospace";
-
       for (let i = 0; i < drops.length; i++) {
         const text = letters[Math.floor(Math.random() * letters.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        // تحريك الحروف للأسفل
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
         drops[i]++;
       }
     }
-
     setInterval(draw, 50);
+
+    // Countdown
+    let count = 3;
+    const countdownEl = document.getElementById("countdown");
+    const messageEl = document.getElementById("message");
+    const music = document.getElementById("music");
+
+    countdownEl.innerHTML = count;
+    const timer = setInterval(() => {
+      count--;
+      if (count >= 0) {
+        countdownEl.innerHTML = count;
+      }
+      if (count < 0) {
+        clearInterval(timer);
+        countdownEl.style.display = "none";
+        // Show messages in sequence
+        let words = ["Happy", "Birthday", "Abdo"];
+        let index = 0;
+        function showWord() {
+          if (index < words.length) {
+            messageEl.innerHTML = words[index];
+            messageEl.style.opacity = 1;
+            setTimeout(() => {
+              messageEl.style.opacity = 0;
+              index++;
+              setTimeout(showWord, 1000);
+            }, 1500);
+          }
+        }
+        showWord();
+        // Play music
+        music.play();
+      }
+    }, 1000);
   </script>
 </body>
 </html>
